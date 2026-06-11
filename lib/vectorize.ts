@@ -1,4 +1,4 @@
-//@ts-ignore
+
 import ImageTracer from 'imagetracerjs';
 
 export interface VectorizeOptions {

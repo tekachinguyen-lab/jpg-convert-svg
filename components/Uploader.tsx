@@ -10,7 +10,7 @@ interface UploaderProps {
 export default function Uploader({ onImageSelected }: UploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleFile = (file: File) => {
+  const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith("image/png") && !file.type.startsWith("image/jpeg")) {
       alert("Please upload a PNG or JPG file.");
       return;
@@ -26,7 +26,7 @@ export default function Uploader({ onImageSelected }: UploaderProps) {
       img.src = dataUrl;
     };
     reader.readAsDataURL(file);
-  };
+  }, [onImageSelected]);
 
   const onDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ export default function Uploader({ onImageSelected }: UploaderProps) {
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFile(e.dataTransfer.files[0]);
     }
-  }, []);
+  }, [handleFile]);
 
   return (
     <div

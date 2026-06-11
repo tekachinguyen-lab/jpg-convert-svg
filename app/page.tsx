@@ -7,8 +7,11 @@ import ConvertButton from "@/components/ConvertButton";
 import PreviewPanel from "@/components/PreviewPanel";
 import { createSvgWrapper } from "@/lib/svgWrapper";
 import { vectorizeImage, VectorizeOptions } from "@/lib/vectorize";
+import { LanguageProvider, useLanguage } from "@/lib/i18n";
 
-export default function Home() {
+function HomeContent() {
+  const { t, language, setLanguage } = useLanguage();
+  
   const [originalImage, setOriginalImage] = useState<string | null>(null);
   const [imageWidth, setImageWidth] = useState<number>(0);
   const [imageHeight, setImageHeight] = useState<number>(0);
@@ -50,21 +53,36 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Conversion failed:", error);
-      alert("Failed to convert image. Check console for details.");
+      alert(t("alert.error"));
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 relative">
+      <div className="absolute top-4 right-4 flex bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+        <button
+          onClick={() => setLanguage("en")}
+          className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${language === "en" ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-50"}`}
+        >
+          EN
+        </button>
+        <button
+          onClick={() => setLanguage("vi")}
+          className={`px-3 py-1 text-sm font-medium rounded-md transition-colors ${language === "vi" ? "bg-blue-100 text-blue-700" : "text-gray-600 hover:bg-gray-50"}`}
+        >
+          VI
+        </button>
+      </div>
+
+      <div className="max-w-5xl mx-auto mt-8">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight mb-4">
-            Image to SVG Converter
+            {t("app.title")}
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Convert your PNG or JPG images to SVG formats instantly entirely in your browser. Choose between a fast wrapper or deep vectorization.
+            {t("app.description")}
           </p>
         </div>
 
@@ -98,5 +116,13 @@ export default function Home() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <LanguageProvider>
+      <HomeContent />
+    </LanguageProvider>
   );
 }
